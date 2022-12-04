@@ -1,0 +1,80 @@
+#searchQueryInput {
+    width: 100%;
+    height: 2.8rem;
+    background: #f5f5f5;
+    outline: none;
+    border: none;
+    border-radius: 1.625rem;
+    padding: 0 3.5rem 0 1.5rem;
+    font-size: 1rem;
+  }
+
+  #searchQuerySubmit {
+    background: #FF7607;
+  }
+
+  #searchQuerySubmit:hover {
+    cursor: pointer;
+  }
+
+  .navbar-style {
+    background-color: #ffffff;
+  }
+  
+  .header {
+    padding-top: 1%;
+  }
+
+  #image-style {
+    text-align: right;
+  }
+
+  #image-style2 {
+    text-align: left;
+  }
+  
+  #image-style, #image-style2{
+    width: 50%;
+  }
+
+  #terms{
+    text-decoration: none;
+  }
+
+  #side-nav{
+    background-color: #FAF9F6;
+  }
+
+  .checked {
+    color: orange;
+  }
+
+  .center-all {
+    text-align: center;
+  }
+
+  .search-header {
+    width: 20%; 
+    margin: auto; 
+    min-width: 20em;
+  }
+
+  .search-bar-svg {
+    width:24px;
+    height:24px;
+  }
+
+  .type-checkbox {
+    display: inline-flex;
+  }
+
+  .footer-logo {
+    width: 150px; 
+    height: 150px;
+  }
+
+  .copyright {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  img { max-width: 100%;}

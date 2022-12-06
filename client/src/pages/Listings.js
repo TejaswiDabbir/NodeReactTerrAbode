@@ -1,9 +1,9 @@
-import './App.css';
+import '../App.css';
 import React, { useEffect, useState } from 'react';
-import MainContent from './components/main-content';
-import SingleListing from './components/single-listing';
+import MainContent from '../components/main-content';
+import SingleListing from '../components/single-listing';
 
-function App() {
+function Listings() {
 
   const [listings, setListings] = useState([]);
   const [filterText, setFilterText] = useState('');
@@ -87,4 +87,4 @@ function SearchBar({
   )
 }
 
-export default App;
+export default Listings;

@@ -14,11 +14,13 @@ function App() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('properties.json')
+    // fetch('properties.json')
+    fetch('http://localhost:8080/properties')
       .then(res => res.json())
       .then((data) => {
-        setListings(data)
-        setLoading(false)
+        console.log(data)
+        // setListings(data)
+        // setLoading(false)
       })
       .catch(err => console.log(err));
   }, []);

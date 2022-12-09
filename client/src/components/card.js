@@ -21,7 +21,7 @@ const Card = (props) => {
           <div className="carousel-inner">
             {props.listing.images.map((image, index) => (
               <div className={"carousel-item" + (index == 0 ? " active" : "")} key={index}>
-                <img src={image} className="d-block w-100" alt="..."></img>
+                <img src={image.filePath} className="d-block w-100" alt="..."></img>
               </div>
             ))}
 
@@ -39,13 +39,14 @@ const Card = (props) => {
         </div>
         <div className="card-body">
           <p className="card-text ">{props.listing.title}<br />
-            <strong>{props.listing.city_name}</strong><br />
+            <strong>{props.listing.location.city}</strong><br />
             <p className="card-description" style={{ fontSize: '14px' }}>{props.listing.description}</p>
-            <strong>{props.listing.nightly_fee}</strong>/night
+            <strong>{props.listing.rate.ratePerNight}</strong>/night
             <span className="float-end"><strong>{props.listing.rating}</strong>&nbsp;<i className="bi bi-star"></i></span>
           </p>
         </div>
       </div>
+      <br></br>
     </div>
   )
 };

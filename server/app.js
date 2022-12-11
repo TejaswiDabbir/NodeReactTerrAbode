@@ -18,6 +18,7 @@ const propertiesRouter = require('./routes/properties')
 const reservationsRouter = require('./routes/reservations')
 const usersRouter = require('./routes/users')
 const reviewsRouter = require('./routes/reviews')
+const favoritesRouter = require('./routes/favorites')
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/properties', propertiesRouter)
 app.use('/reservations', reservationsRouter)
 app.use('/users', usersRouter)
 app.use('/reviews', reviewsRouter)
+app.use('/favorites', favoritesRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

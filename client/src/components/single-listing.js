@@ -13,8 +13,12 @@ import {
     MenuItem,
     InputLabel,
     FormControl,
-    Rating
+    Rating,
+    IconButton
 } from '@mui/material'
+import {
+    Favorite,
+} from '@mui/icons-material'
 
 const SingleListing = (props) => {
 
@@ -27,21 +31,34 @@ const SingleListing = (props) => {
         endDate: ''
     }
 
-    const [loading, setLoading] = useState(true);
+    const [loadingReviews, setLoadingReviews] = useState(true);
+    const [loadingFavorites, setLoadingFavorites] = useState(true);
     const [reviews, setReviews] = useState([]);
     const [newReservation, setNewReservation] = useState(reservationSchema);
     // const [isFormValid, setIsFormValid] = React.useState(true);
     // const [isFormSubmitting, setIsFormSubmitting] = React.useState(false);
+    const [favoriteId, setFavoriteId] = useState('-1');
 
     useEffect(() => {
-        setLoading(true);
+        setLoadingReviews(true);
+        setLoadingFavorites(true);
         // fetch('properties.json')
         fetch('http://localhost:8080/reviews/' + props.listing._id)
             .then(res => res.json())
             .then((data) => {
-                console.log(data)
+                // console.log(data)
                 setReviews(data)
-                setLoading(false)
+                setLoadingReviews(false)
+            })
+            .catch(err => console.log(err));
+        fetch('http://localhost:8080/favorites/userproperty/?userId=639237c1a0fead10016e489b&propertyId=' + props.listing._id)
+            .then(res => res.json())
+            .then((data) => {
+                console.log('Favorites', data)
+                if (data && data.length > 0) {
+                    setFavoriteId(data[0]._id);
+                }
+                setLoadingFavorites(false);
             })
             .catch(err => console.log(err));
     }, []);
@@ -52,7 +69,7 @@ const SingleListing = (props) => {
 
     const createReservation = () => {
         // setIsFormSubmitting(true)
-        console.log(newReservation)
+        // console.log(newReservation)
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -60,15 +77,43 @@ const SingleListing = (props) => {
         };
         fetch("http://localhost:8080/reservations", requestOptions)
             .then((response) => response.json())
-            .then((data) => console.log(data))
+            .then((data) => { console.log(data) })
             .catch((error) => console.log(error));
+    }
 
+    const addToFavorites = () => {
+        const newFavorite = {
+            userId: '639237c1a0fead10016e489b',
+            propertyId : props.listing._id,
+        }
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newFavorite),
+        };
+        fetch("http://localhost:8080/favorites", requestOptions)
+            .then((response) => response.json())
+            .then((data) => { 
+                console.log(data)
+                setFavoriteId(data._id)
+             })
+            .catch((error) => console.log(error));
+    }
+
+    const removeFromFavorites = () => {
+        fetch("http://localhost:8080/favorites/remove/" + favoriteId)
+            .then((response) => response.json())
+            .then((data) => { 
+                console.log(data)
+                setFavoriteId('-1')
+             })
+            .catch((error) => console.log(error));
     }
 
     return (
         <>
             {
-                loading ?
+                loadingReviews && loadingFavorites ?
                     <div>Loading data </div> :
                     <>
                         <div>
@@ -76,13 +121,35 @@ const SingleListing = (props) => {
                                 <div className='col-lg-1'>
                                     <button onClick={backClick}>BACK</button>
                                 </div>
-                                <div className='col-lg-10'>
+                                <div className='col-lg-8'>
                                     <h1><strong>{props.listing.title}</strong></h1>
                                     <i>{props.listing.location.city} - {props.listing.roomType} | {props.listing.bedrooms} bedrooms</i>
                                 </div>
-                                <div className='col-lg-1'>
-                                    <h2><strong>{props.listing.rating}</strong>&nbsp;<i className="bi bi-star"></i></h2>
+                                <div className='col-lg-2'>
+                                    <h2 class="d-flex justify-content-end"><strong>{props.listing.rating}</strong>&nbsp;<i className="bi bi-star"></i></h2>
+                                    {
+                                        favoriteId === '-1' ?
+                                        <Button
+                                        variant='contained'
+                                        color='success'
+                                        startIcon={<Favorite />}
+                                        onClick={() => addToFavorites()}
+                                    >
+                                        Add to favorites
+                                    </Button>
+                                    :
+                                    <Button
+                                        variant='contained'
+                                        color='error'
+                                        startIcon={<Favorite />}
+                                        onClick={() => removeFromFavorites()}
+                                    >
+                                        Remove favorite
+                                    </Button>
+                                    }
+                                    
                                 </div>
+                                <div className='col-lg-1'></div>
                             </div>
                             <br />
                             <div className="row">

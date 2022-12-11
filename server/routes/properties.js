@@ -61,22 +61,14 @@ router.post('/', async (req,res) => {
                 state : req.body.location.state,
                 country : req.body.location.country,
                 pinCode : req.body.location.pinCode,
-                latitude : req.body.location.latitude,
-                longitude : req.body.location.longitude,
-                description : req.body.location.description,
             },
             hostId : req.body.hostId,
             rating : req.body.rating,
-            thumbnails : req.body.thumbnails,
             images : req.body.images,
             rate : {
                 ratePerNight : req.body.rate.ratePerNight,
-                currency : req.body.rate.currency,
                 additionalCharges : req.body.rate.additionalCharges
             },
-            reviews : req.body.reviews,
-            amenities : req.body.amenities,
-            rules : req.body.rules
         })
         const newProperty = await property.save()
         res.status(200).json(newProperty)

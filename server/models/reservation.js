@@ -1,25 +1,31 @@
 const mongoose = require('mongoose')
 
 const reservationSchema = new mongoose.Schema({
-    "userId" : {
+    userId : {
         type : mongoose.Schema.Types.ObjectId
         // type : String
     },
-    "propertyId" : {
+    propertyId : {
         type : mongoose.Schema.Types.ObjectId
         // type : String
     },
-    "bookingPrice" : {
-        type : Number
-    },
-    "status" : {
+    propertyName : {
         type : String
     },
-    "startDate" : {
+    hostId : {
+        type : mongoose.Schema.Types.ObjectId
+    },
+    bookingPrice : {
+        type : Number
+    },
+    status : {
+        type : String
+    },
+    startDate : {
         type : Date,
         default : Date.now
     },
-    "endDate" : {
+    endDate : {
         type : Date
     },
 })

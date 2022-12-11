@@ -14,6 +14,17 @@ router.get('/:userId', async (req,res) => {
     }
 })
 
+router.get('/host/:hostId', async (req,res) => {
+    try{
+        const reservations = await Reservation.find({
+            hostId : req.params.hostId
+        })
+        res.send(reservations)
+    } catch(error) {
+        res.status(500).json({ message:error.message })
+    }
+})
+
 //get one helper
 async function getReservation(req,res,next) {
     let reservation

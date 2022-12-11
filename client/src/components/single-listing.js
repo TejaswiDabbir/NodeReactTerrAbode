@@ -12,19 +12,21 @@ import {
     Select,
     MenuItem,
     InputLabel,
-    FormControl,
     Rating,
-    IconButton
+    Box,
 } from '@mui/material'
 import {
     Favorite,
 } from '@mui/icons-material'
+import AddReviewModal from './add-review-modal'
 
 const SingleListing = (props) => {
 
     const reservationSchema = {
         userId: '639237c1a0fead10016e489b',
         propertyId: props.listing._id,
+        propertyName: props.listing.title,
+        hostId: props.listing.hostId,
         bookingPrice: props.listing.rate.ratePerNight,
         status: 'Initiated',
         startDate: '',
@@ -38,6 +40,7 @@ const SingleListing = (props) => {
     // const [isFormValid, setIsFormValid] = React.useState(true);
     // const [isFormSubmitting, setIsFormSubmitting] = React.useState(false);
     const [favoriteId, setFavoriteId] = useState('-1');
+    const [addReview, setAddReview] = useState(0)
 
     useEffect(() => {
         setLoadingReviews(true);
@@ -47,14 +50,13 @@ const SingleListing = (props) => {
             .then(res => res.json())
             .then((data) => {
                 // console.log(data)
-                setReviews(data)
+                setReviews(data.slice(0, 5))
                 setLoadingReviews(false)
             })
             .catch(err => console.log(err));
         fetch('http://localhost:8080/favorites/userproperty/?userId=639237c1a0fead10016e489b&propertyId=' + props.listing._id)
             .then(res => res.json())
             .then((data) => {
-                console.log('Favorites', data)
                 if (data && data.length > 0) {
                     setFavoriteId(data[0]._id);
                 }
@@ -62,6 +64,18 @@ const SingleListing = (props) => {
             })
             .catch(err => console.log(err));
     }, []);
+
+    const updateReviews = () => {
+        setLoadingReviews(true);
+        fetch('http://localhost:8080/reviews/' + props.listing._id)
+            .then(res => res.json())
+            .then((data) => {
+                // console.log(data)
+                setReviews(data.slice(0, 5))
+                setLoadingReviews(false)
+            })
+            .catch(err => console.log(err));
+    }
 
     const backClick = () => {
         props.mainContentView();
@@ -84,7 +98,7 @@ const SingleListing = (props) => {
     const addToFavorites = () => {
         const newFavorite = {
             userId: '639237c1a0fead10016e489b',
-            propertyId : props.listing._id,
+            propertyId: props.listing._id,
         }
         const requestOptions = {
             method: "POST",
@@ -93,20 +107,20 @@ const SingleListing = (props) => {
         };
         fetch("http://localhost:8080/favorites", requestOptions)
             .then((response) => response.json())
-            .then((data) => { 
+            .then((data) => {
                 console.log(data)
                 setFavoriteId(data._id)
-             })
+            })
             .catch((error) => console.log(error));
     }
 
     const removeFromFavorites = () => {
         fetch("http://localhost:8080/favorites/remove/" + favoriteId)
             .then((response) => response.json())
-            .then((data) => { 
+            .then((data) => {
                 console.log(data)
                 setFavoriteId('-1')
-             })
+            })
             .catch((error) => console.log(error));
     }
 
@@ -129,25 +143,25 @@ const SingleListing = (props) => {
                                     <h2 class="d-flex justify-content-end"><strong>{props.listing.rating}</strong>&nbsp;<i className="bi bi-star"></i></h2>
                                     {
                                         favoriteId === '-1' ?
-                                        <Button
-                                        variant='contained'
-                                        color='success'
-                                        startIcon={<Favorite />}
-                                        onClick={() => addToFavorites()}
-                                    >
-                                        Add to favorites
-                                    </Button>
-                                    :
-                                    <Button
-                                        variant='contained'
-                                        color='error'
-                                        startIcon={<Favorite />}
-                                        onClick={() => removeFromFavorites()}
-                                    >
-                                        Remove favorite
-                                    </Button>
+                                            <Button
+                                                variant='contained'
+                                                color='success'
+                                                startIcon={<Favorite />}
+                                                onClick={() => addToFavorites()}
+                                            >
+                                                Add to favorites
+                                            </Button>
+                                            :
+                                            <Button
+                                                variant='contained'
+                                                color='error'
+                                                startIcon={<Favorite />}
+                                                onClick={() => removeFromFavorites()}
+                                            >
+                                                Remove favorite
+                                            </Button>
                                     }
-                                    
+
                                 </div>
                                 <div className='col-lg-1'></div>
                             </div>
@@ -157,7 +171,10 @@ const SingleListing = (props) => {
                                 <div className='col-lg-10'>
                                     <div className='d-flex flex-row'>
                                         <div className='col-lg-8'>
-                                            <img src={props.listing.images[0].filePath} alt="..."></img>
+                                            {
+                                                props.listing.images[0] ? <img src={props.listing.images[0].filePath} alt="..."></img> : <></>
+                                            }
+
                                         </div>
                                         <div className='col-lg-4'>
                                             {
@@ -221,12 +238,24 @@ const SingleListing = (props) => {
                                     <Container>
                                         <Grid container spacing={2}>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography variant='h5'>REVIEWS</Typography>
+                                                <Typography variant='h5'>
+                                                    <Grid container>
+                                                        <Grid item xs={12} sm={6}>
+                                                            REVIEWS
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={6}>
+                                                            <Box display="flex" justifyContent="flex-end">
+                                                                <AddReviewModal propertyId={props.listing._id} userName='First User' updateReviews={updateReviews} />
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Typography>
+
                                                 {
                                                     reviews.length == 0 ?
                                                         <div>There are no reviews yet for this property</div>
                                                         :
-                                                        <Card>
+                                                        <Card style={{ padding: '5%' }}>
                                                             <CardContent>
                                                                 {
                                                                     reviews.map((review, index) => (
@@ -280,6 +309,7 @@ const SingleListing = (props) => {
                                             </Grid>
                                         </Grid>
                                     </Container>
+
                                 </div>
                                 <div className='col-lg-1'></div>
                             </div>

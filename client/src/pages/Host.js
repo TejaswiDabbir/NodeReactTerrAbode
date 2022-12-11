@@ -23,6 +23,10 @@ function Host() {
             .catch(err => console.log(err));
     }, []);
 
+    const updateProperties = () => {
+        window.location.reload()
+      }
+
     return (
         <div className="col-lg-12">
             <SearchBar />
@@ -36,7 +40,7 @@ function Host() {
                                     <h1>Hi {user.firstName} {user.lastName}</h1>
                                 </div>
                                 <div className='col-lg-2'>
-                                    <button>Add Property</button>
+                                    <AddProperty userId='639237c1a0fead10016e489b' updateProperties={updateProperties}/>
                                 </div>
                             </div>
                             <Tabs
@@ -45,14 +49,14 @@ function Host() {
                                 className="mb-3"
                             >
                                 <Tab eventKey="listings" title="Your Properties">
-                                    <HostListings />
+                                    <HostListings updateProperties={updateProperties}/>
                                 </Tab>
                                 <Tab eventKey="reservations" title="Reservations">
                                     <HostReservations />
                                 </Tab>
-                                <Tab eventKey="addProperty" title="Add Property">
+                                {/* <Tab eventKey="addProperty" title="Add Property">
                                     <AddProperty />
-                                </Tab>
+                                </Tab> */}
                             </Tabs>
                         </>
                     )

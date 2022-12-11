@@ -10,9 +10,11 @@ import {
     Card,
     CardContent,
     OutlinedInput,
-    InputAdornment
+    InputAdornment,
+    IconButton,
 } from '@mui/material'
 import {
+    Edit,
     AddHome,
 } from '@mui/icons-material'
 
@@ -30,70 +32,21 @@ const style = {
     overflow: 'scroll',
 };
 
-const AddPropertyModal = (props) => {
-
-    const propertySchema = {
-        title: '',
-        description: '',
-        roomType: '',
-        bedrooms: '',
-        location: {
-            streetName: '',
-            apt: '',
-            city: '',
-            state: '',
-            country: '',
-            pinCode: '',
-        },
-        hostId: props.userId,
-        rating: '5',
-        images: [],
-        rate: {
-            ratePerNight: '500',
-            additionalCharges: []
-        },
-        amenities: [],
-        rules: []
-    }
+const EditPropertyModal = (props) => {
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [newProperty, setNewProperty] = useState(propertySchema);
-    const [images, setImages] = useState([])
-
-    const uploadImages = () => {
-        console.log(images)
-        const imageData = new FormData()
-        for (let image in images) {
-            imageData.append(
-                'img', image
-            )
-        }
-        // imageData.append('img', images[0])
-        console.log(imageData)
-        const requestOptions = {
-            method: "POST",
-            body: imageData,
-        };
-        fetch("http://localhost:8080/files/propertyImages", requestOptions)
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data)
-                // props.updateProperties()
-                // setOpen(false)
-            })
-            .catch((error) => console.log(error));
-    }
+    const [newProperty, setNewProperty] = useState(props.property);
 
     const createProperty = () => {
         console.log(newProperty)
         const requestOptions = {
-            method: "POST",
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newProperty),
         };
-        fetch("http://localhost:8080/properties", requestOptions)
+        fetch("http://localhost:8080/properties/" + newProperty._id, requestOptions)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data)
@@ -105,7 +58,10 @@ const AddPropertyModal = (props) => {
 
     return (
         <>
-            <Button variant='contained' onClick={handleOpen}>Add Property</Button>
+            {/* <Button variant='outlined' onClick={handleOpen}></Button> */}
+            <IconButton aria-label="edit" onClick={handleOpen}>
+                <Edit />
+            </IconButton>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -115,21 +71,21 @@ const AddPropertyModal = (props) => {
                 <Box sx={style}>
                     <Grid container justifyContent="center">
                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                            ADD NEW PROPERTY
+                            EDIT PROPERTY
                         </Typography>
                     </Grid>
                     <Grid container>
                         <Grid item xs={12} style={{ margin: '1%' }}>
                             <Card>
                                 <CardContent>
-                                    <TextField label='Title' onChange={(e) => setNewProperty({ ...newProperty, title: e.target.value })} variant='outlined' fullWidth />
-                                    <TextField label='Description' onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })} multiline rows={2} variant='outlined' fullWidth style={{ marginTop: '1%' }} />
+                                    <TextField label='Title' onChange={(e) => setNewProperty({ ...newProperty, title: e.target.value })} variant='outlined' value={newProperty.title} fullWidth />
+                                    <TextField label='Description' onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })} value={newProperty.description} multiline rows={2} variant='outlined' fullWidth style={{ marginTop: '1%' }} />
                                     <Grid container spacing={2} justifyContent="center">
                                         <Grid item xs={12} sm={6} style={{ paddingTop: '3%' }}>
-                                            <TextField label='Room Type' onChange={(e) => setNewProperty({ ...newProperty, roomType: e.target.value })} variant='outlined' fullWidth />
+                                            <TextField label='Room Type' onChange={(e) => setNewProperty({ ...newProperty, roomType: e.target.value })}  value={newProperty.roomType} variant='outlined' fullWidth />
                                         </Grid>
                                         <Grid item xs={12} sm={6} style={{ paddingTop: '3%' }}>
-                                            <TextField label='No. of bedrooms' onChange={(e) => setNewProperty({ ...newProperty, bedrooms: e.target.value })} variant='outlined' fullWidth />
+                                            <TextField label='No. of bedrooms' onChange={(e) => setNewProperty({ ...newProperty, bedrooms: e.target.value })} value={newProperty.bedrooms} variant='outlined' fullWidth />
                                         </Grid>
                                     </Grid>
                                 </CardContent>
@@ -138,24 +94,24 @@ const AddPropertyModal = (props) => {
                         <Grid item xs={12} style={{ margin: '1%' }}>
                             <Card>
                                 <CardContent>
-                                    <TextField label='Street' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, streetName: e.target.value } })} variant='outlined' fullWidth />
+                                    <TextField label='Street' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, streetName: e.target.value } })} value={newProperty.location.streetName} variant='outlined' fullWidth />
                                     <Grid container>
                                         <Grid item xs={6} sm={4} style={{ padding: '1%' }}>
-                                            <TextField label='Apt' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, apt: e.target.value } })} variant='outlined' fullWidth />
+                                            <TextField label='Apt' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, apt: e.target.value } })} value={newProperty.location.apt} variant='outlined' fullWidth />
                                         </Grid>
                                         <Grid item xs={6} sm={4} style={{ padding: '1%' }}>
-                                            <TextField label='State' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, apt: e.target.value } })} variant='outlined' fullWidth />
+                                            <TextField label='State' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, state: e.target.value } })} value={newProperty.location.state} variant='outlined' fullWidth />
                                         </Grid>
                                         <Grid item xs={6} sm={4} style={{ padding: '1%' }}>
-                                            <TextField label='City' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, apt: e.target.value } })} variant='outlined' fullWidth />
+                                            <TextField label='City' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, city: e.target.value } })} value={newProperty.location.city} variant='outlined' fullWidth />
                                         </Grid>
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={6} style={{ padding: '1%' }}>
-                                            <TextField label='Country' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, country: e.target.value } })} variant='outlined' fullWidth />
+                                            <TextField label='Country' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, country: e.target.value } })} value={newProperty.location.country} variant='outlined' fullWidth />
                                         </Grid>
                                         <Grid item xs={6} style={{ padding: '1%' }}>
-                                            <TextField label='Zip Code' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, pinCode: e.target.value } })} variant='outlined' fullWidth />
+                                            <TextField label='Zip Code' onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, pinCode: e.target.value } })} value={newProperty.location.pinCode} variant='outlined' fullWidth />
                                         </Grid>
                                     </Grid>
                                 </CardContent>
@@ -165,9 +121,9 @@ const AddPropertyModal = (props) => {
                             <Card>
                                 <CardContent>
                                     <Grid container justifyContent="center">
-                                        <input type='file' multiple onChange={(e) => setImages(e.target.files)}></input>
-                                        <Button variant='contained' component='label' onClick={uploadImages}>
+                                        <Button variant='contained' component='label'>
                                             Upload images
+                                            <input type='file' multiple hidden></input>
                                         </Button>
                                     </Grid>
                                 </CardContent>
@@ -180,6 +136,7 @@ const AddPropertyModal = (props) => {
                                     <OutlinedInput
                                         id="outlined-adornment-amount"
                                         onChange={(e) => setNewProperty({ ...newProperty, rate: { ...newProperty.rate, ratePerNight: e.target.value } })}
+                                        value={newProperty.rate.ratePerNight}
                                         startAdornment={<InputAdornment position="start">$</InputAdornment>}
                                         label="Amount"
                                     />
@@ -188,7 +145,7 @@ const AddPropertyModal = (props) => {
                         </Grid>
                     </Grid>
                     <Grid container justifyContent="center" style={{ padding: '5%' }}>
-                        <Button variant='contained' color='success' startIcon={<AddHome />} onClick={createProperty}>ADD</Button>
+                        <Button variant='contained' color='success' startIcon={<AddHome />} onClick={createProperty}>CONFIRM</Button>
                     </Grid>
                 </Box>
             </Modal>
@@ -196,4 +153,4 @@ const AddPropertyModal = (props) => {
     );
 };
 
-export default AddPropertyModal;
+export default EditPropertyModal;

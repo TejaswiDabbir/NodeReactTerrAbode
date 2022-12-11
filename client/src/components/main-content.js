@@ -7,6 +7,7 @@ const MainContent = (props) => {
     if (e.target.tagName === 'SPAN' || e.target.tagName === 'BUTTON') {
       return;
     }
+    console.log(idx);
     props.singleListingView(idx);
   }
 

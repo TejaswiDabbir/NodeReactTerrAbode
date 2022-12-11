@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Listings from './pages/Listings'
+import Listings from './pages/Listings';
+import Host from './pages/Host';
 
 const router = createBrowserRouter([
     {
@@ -14,7 +15,11 @@ const router = createBrowserRouter([
     {
         path: "/listings",
         element: <Listings />,
-    }
+    },
+    {
+        path: "/host",
+        element: <Host />,
+    },
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

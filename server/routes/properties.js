@@ -13,6 +13,18 @@ router.get('/', async (req,res) => {
     }
 })
 
+//list per hostId
+router.get('/host/:id', async (req,res) => {
+    try{
+        const properties = await Property.find({
+            hostId: req.params.id
+        })
+        res.send(properties)
+    } catch(error) {
+        res.status(500).json({ message:error.message })
+    }
+})
+
 //get one helper
 async function getProperty(req,res,next) {
     let property

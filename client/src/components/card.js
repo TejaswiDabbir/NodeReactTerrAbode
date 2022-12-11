@@ -4,7 +4,7 @@ const Card = (props) => {
   return (
     <div className="col-lg-3">
       <div className="card" onClick={(e) => {
-        props.cardClick(e, props.listing.id)
+        props.cardClick(e, props.listing._id)
       }}>
         <div id={"carouselExampleIndicators" + props.cardno} className="carousel slide" data-bs-ride="carousel">
           <div className="carousel-indicators">

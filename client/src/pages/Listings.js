@@ -43,7 +43,7 @@ function Listings() {
 
   useEffect(() => {
     if (!listView) {
-      setListingInfo(listings.filter(v => v.id === listingID))
+      setListingInfo(listings.filter(v => v._id === listingID))
       setLoading(false)
     }
   }, [listView])

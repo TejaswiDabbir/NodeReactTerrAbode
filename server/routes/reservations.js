@@ -37,17 +37,15 @@ router.get('/:id', getReservation, (req,res) => {
 //add one
 router.post('/', async (req,res) => {
     try{
-        console.log(req.body)
-        const reservation = new Reservation({
-            userId : req.body.userId,
-            propertyId : req.body.propertyId,
-            bookingPrice : req.body.bookingPrice,
-            status : req.body.status,
-            endDate : req.body.endDate,
-            transaction : req.body.transaction
-        })
-        const newReservation = await reservation.save()
-        res.status(200).json(newReservation)
+		Reservation.create(req.body, (err, reservations) => {
+			if (err) {
+				console.log(err);
+				return res.status(500).send(err)
+			}
+            
+			res.status(200).json(reservations)
+		});
+
     } catch(error) {
         res.status(400).json({ message:error.message })
     }

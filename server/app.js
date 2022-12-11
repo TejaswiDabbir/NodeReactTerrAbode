@@ -16,6 +16,8 @@ db.once('open', () => console.log('Connected to mongo'))
 var indexRouter = require('./routes/index');
 const propertiesRouter = require('./routes/properties')
 const reservationsRouter = require('./routes/reservations')
+const usersRouter = require('./routes/users')
+const reviewsRouter = require('./routes/reviews')
 
 var app = express();
 
@@ -33,6 +35,8 @@ app.use(cors())
 app.use('/', indexRouter);
 app.use('/properties', propertiesRouter)
 app.use('/reservations', reservationsRouter)
+app.use('/users', usersRouter)
+app.use('/reviews', reviewsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

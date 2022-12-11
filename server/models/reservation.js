@@ -2,20 +2,15 @@ const mongoose = require('mongoose')
 
 const reservationSchema = new mongoose.Schema({
     "userId" : {
-        // type : mongoose.Schema.Types.ObjectId
-        type : String
+        type : mongoose.Schema.Types.ObjectId
+        // type : String
     },
     "propertyId" : {
-        // type : mongoose.Schema.Types.ObjectId
-        type : String
+        type : mongoose.Schema.Types.ObjectId
+        // type : String
     },
     "bookingPrice" : {
-        "value" : {
-            type : Number
-        },
-        "currency" : {
-            type : String
-        }
+        type : Number
     },
     "status" : {
         type : String
@@ -26,10 +21,6 @@ const reservationSchema = new mongoose.Schema({
     },
     "endDate" : {
         type : Date
-    },
-    "transaction" : {
-        // type : mongoose.Schema.Types.ObjectId
-        type : String
     },
 })
 

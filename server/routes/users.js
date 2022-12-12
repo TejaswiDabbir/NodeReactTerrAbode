@@ -32,35 +32,66 @@ router.get('/:id', getUser, (req,res) => {
     res.json(res.user)
 })
 
+router.get('/:userName', async (req,res) => {
+    try{
+        const users = await User.find({
+            userName : req.params.userName
+        })
+        res.send(users)
+    } catch(error) {
+        res.status(500).json({ message:error.message })
+    }
+})
 //add one
+// router.post('/', async (req,res) => {
+//     try{
+//         console.log(req.body)
+//         const user = new User({
+//             isHost : req.body.isHost,
+//             contactDetails : {
+//                 phone : req.body.contactDetails.phone,
+//                 email : req.body.contactDetails.email
+//             },
+//             firstName : req.body.firstName,
+//             middleName : req.body.middleName,
+//             lastName : req.body.lastName,
+//             gender : req.body.gender,
+//             address : {
+//                 streetName : req.body.address.streetName,
+//                 apt : req.body.address.apt,
+//                 city : req.body.address.city,
+//                 state : req.body.address.state,
+//                 country : req.body.address.country,
+//                 pinCode : req.body.address.pinCode,
+//             },
+//             hostDetails : {
+//                 rating : req.body.hostDetails.rating,
+//                 properties : []
+//             }
+//         })
+//         const newUser = await user.save()
+//         res.status(200).json(newUser)
+//     } catch(error) {
+//         res.status(400).json({ message:error.message })
+//     }
+// })
+
 router.post('/', async (req,res) => {
     try{
-        console.log(req.body)
-        const user = new User({
-            isHost : req.body.isHost,
-            contactDetails : {
-                phone : req.body.contactDetails.phone,
-                email : req.body.contactDetails.email
-            },
-            firstName : req.body.firstName,
-            middleName : req.body.middleName,
-            lastName : req.body.lastName,
-            gender : req.body.gender,
-            address : {
-                streetName : req.body.address.streetName,
-                apt : req.body.address.apt,
-                city : req.body.address.city,
-                state : req.body.address.state,
-                country : req.body.address.country,
-                pinCode : req.body.address.pinCode,
-            },
-            hostDetails : {
-                rating : req.body.hostDetails.rating,
-                properties : []
-            }
+        const newUsers = new User({
+		//contactDetails =req.body.contactDetails != null ?req.body.contactDetails : {};
+        firstName : req.body.firstName != null ? req.body.firstName : firstName,
+        middleName : req.body.middleName != null ? req.body.middleName : middleName,
+        lastName : req.body.lastName != null ? req.body.lastName : lastName,
+        gender : req.body.gender != null ? req.body.gender : "default",
+        //res.user.address = req.body.address != null ? req.body.address : {};
+        //res.user.hostDetails = req.body.hostDetails != null ? req.body.hostDetails : {};
+        //isHost : req.body.isHost != null ? req.body.isHost : "default",
+        userName : req.body.userName != null ? req.body.userName : userName,
+        password : req.body.hashedPassword != null ? req.body.hashedPassword : password
         })
-        const newUser = await user.save()
-        res.status(200).json(newUser)
+        const newUser = await newUsers.save()
+        res.json(newUser)
     } catch(error) {
         res.status(400).json({ message:error.message })
     }

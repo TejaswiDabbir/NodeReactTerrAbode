@@ -46,7 +46,7 @@ const Login = () => {
               }}
             >
               <Form.Item
-                name="username"
+                name="userName"
                 label="User Name"
                 rules={[
                   {
@@ -77,8 +77,17 @@ const Login = () => {
         const [visible, setVisible] = useState(false);
       
         const onCreate = (values) => {
-          console.log('Received values of form: ', values);
-          setVisible(false);
+          const hashedPassword=md5(values.password)
+          fetch("http://localhost:8080/users/" + values.userName)
+          .then((response) => response.json())
+          .then((data) => { console.log("DATA",data)
+            if (data.success) {
+            console.log("SUCCESSSSS")
+          } else {
+            // Login failed, do something here
+            console.log("FAILUREEEEE")
+          }})
+          .catch((error) => console.log(error," Request Body: "));
         };
       
         return (

@@ -11,15 +11,26 @@ import { Button, Modal, Form, Input, Radio } from 'antd';
 
 const Signup = () =>{
    //popup and form code
-   const [username, setUsername] = useState('');
-   const [password, setPassword] = useState('');
 
-   function handleSubmit(event) {
+   const handleSubmit=(values) => {
  
-    event.preventDefault();
-    const hashedPassword = md5(password);
+    const hashedPassword = md5(values.password);
+    const userName = values.username;
+    const firstName = values.firstname;
+    const middleName = values.middlename;
+    const lastName =values.lastname;
+    const number = values.number;
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstName, userName, hashedPassword, middleName, lastName, number }),
+      };
+      fetch("http://localhost:8080/users", requestOptions)
+          .then((response) => response.json())
+          .then((data) => { console.log("Data sent",data,"ANDDDDD", requestOptions) })
+          .catch((error) => console.log(error," Request Body: ",requestOptions));
 
-  }
+      }
 
     const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
         const [form] = Form.useForm();
@@ -36,13 +47,15 @@ const Signup = () =>{
                 .then((values) => {
                   form.resetFields();
                   onCreate(values);
+                  handleSubmit(values);
+                  
                 })
                 .catch((info) => {
                   console.log('Validate Failed:', info);
                 });
             }}
           >
-            <Form onSubmit={handleSubmit}
+            <Form //onSubmit={handleSubmit}
               form={form}
               layout="vertical"
               name="form_in_modal"
@@ -87,7 +100,7 @@ const Signup = () =>{
                 <Input />
               </Form.Item>
               <Form.Item
-                name="email"
+                name="username"
                 label="Email ID"
                 
                 rules={[
@@ -95,10 +108,13 @@ const Signup = () =>{
                     required: true,
                     message: 'Please enter Email ID',
                   },
+                  {
+                    pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                    message: 'Must be in the form abc@xyz.co',
+                  },
                 ]}
               >
-                <Input type="email" 
-                onChange={(event) => setUsername(event.target.value)}/>
+                <Input type='email'/>
               </Form.Item>
               <Form.Item
                 name="number"
@@ -108,6 +124,10 @@ const Signup = () =>{
                     required: true,
                     message: 'Please enter Phone Number',
                   },
+                  {
+                    pattern: /^[0-9]{3}[0-9]{3}[0-9]{4}$/,
+                    message: 'Must contain at least ten numbers and no letters or characters',
+                },
                 ]}
               >
                 <Input />
@@ -124,8 +144,7 @@ const Signup = () =>{
                 },
               ]}
               >
-                <Input type="password" 
-                onChange={(event) => setPassword(event.target.value)}/>
+                <Input type="password"/>
               </Form.Item>
               
             </Form>
@@ -138,7 +157,7 @@ const Signup = () =>{
       
         const onCreate = (values) => {
           console.log('Received values of form: ', values);
-          setVisible(false);
+          setVisible(true);
         };
       
         return (
@@ -147,6 +166,7 @@ const Signup = () =>{
               type="primary"
               onClick={() => {
                 setVisible(true);
+                
               }}
             >
               Sign Up

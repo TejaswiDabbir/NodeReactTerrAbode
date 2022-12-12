@@ -127,7 +127,7 @@ const SingleListing = (props) => {
     return (
         <>
             {
-                loadingReviews && loadingFavorites ?
+                loadingReviews || loadingFavorites ?
                     <div>Loading data </div> :
                     <>
                         <div>
@@ -170,22 +170,33 @@ const SingleListing = (props) => {
                                 <div className='col-lg-1'></div>
                                 <div className='col-lg-10'>
                                     <div className='d-flex flex-row'>
-                                        <div className='col-lg-8'>
-                                            {
-                                                props.listing.images[0] ? <img src={props.listing.images[0].filePath} alt="..."></img> : <></>
-                                            }
+                                        {
+                                            props.listing.images.length == 1 ?
+                                                <div className='col-lg-12'>
+                                                    {
+                                                        props.listing.images[0] ? <img src={props.listing.images[0].filePath} alt="..."></img> : <></>
+                                                    }
+                                                </div>
+                                                :
+                                                <>
+                                                    <div className='col-lg-8'>
+                                                        {
+                                                            props.listing.images[0] ? <img src={props.listing.images[0].filePath} alt="..."></img> : <></>
+                                                        }
+                                                    </div>
+                                                    <div className='col-lg-4'>
+                                                        {
+                                                            props.listing.images[1] ? <img src={props.listing.images[1].filePath} alt="..."></img> : <></>
+                                                        }
+                                                        <p></p>
+                                                        {
+                                                            props.listing.images[2] ? <img src={props.listing.images[2].filePath} alt="..."></img> : <></>
+                                                        }
 
-                                        </div>
-                                        <div className='col-lg-4'>
-                                            {
-                                                props.listing.images[1] ? <img src={props.listing.images[1].filePath} alt="..."></img> : <></>
-                                            }
-                                            <p></p>
-                                            {
-                                                props.listing.images[2] ? <img src={props.listing.images[2].filePath} alt="..."></img> : <></>
-                                            }
+                                                    </div>
+                                                </>
+                                        }
 
-                                        </div>
                                     </div>
                                     <br />
 

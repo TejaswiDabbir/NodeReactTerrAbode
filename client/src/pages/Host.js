@@ -5,6 +5,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import HostListings from '../components/host-listings';
 import HostReservations from '../components/host-reservations';
 import AddProperty from '../components/add-property';
+import { useNavigate } from 'react-router-dom';
 
 function Host() {
 
@@ -65,10 +66,19 @@ function Host() {
     )
 }
 function SearchBar() {
+    const navigate = useNavigate()
+
+    const navHome = () => {
+        navigate('/listings', {
+            state: {
+              key: 'value',
+            }
+          })
+    }
     return (
         <div className="row navbar-style">
             <div className="col-lg-1 center-all">
-                <img src="logo.png" alt="..." height="85px"></img>
+                <img src="logo.png" alt="..." height="85px" onClick={navHome}></img>
             </div>
         </div>
     )

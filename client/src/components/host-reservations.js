@@ -4,16 +4,7 @@ import {
   Typography,
   Grid,
   Card,
-  CardMedia,
   CardContent,
-  Button,
-  Divider,
-  TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  Rating,
-  Box,
 } from '@mui/material'
 
 const HostReservations = (props) => {

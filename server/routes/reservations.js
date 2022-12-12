@@ -89,5 +89,15 @@ router.delete('/:id', getReservation, async (req,res) => {
     }
 })
 
+//delete one
+router.get('/remove/:id', getReservation, async (req,res) => {
+    try {
+        await res.reservation.remove()
+        res.json({ message: "Reservation deleted"})
+    } catch(error) {
+        res.status(500).json({ message:error.message })
+    }
+})
+
 
 module.exports = router

@@ -4,31 +4,61 @@ import MainContent from '../components/main-content';
 import SingleListing from '../components/single-listing';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
+import AccountMenu from '../components/account-menu';
+import {
+  Tooltip,
+  IconButton
+} from '@mui/material'
+import {
+  AddHome,
+  Favorite,
+  EventSeat
+} from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom';
 
 function Listings() {
 
   const [listings, setListings] = useState([]);
   const [filterText, setFilterText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadingFavorites, setLoadingFavorites] = useState(true);
   const [listView, setListView] = useState(true);
   const [listingInfo, setListingInfo] = useState([]);
   const [listingID, setListingID] = useState(-1);
+  const [favoriteIds, setFavoriteIds] = useState([])
+  const [showFavorites, setShowFavorites] = useState(false)
+
+
+  const userId = '639237c1a0fead10016e489b';
 
   useEffect(() => {
     setLoading(true);
-    // fetch('properties.json')
+    setLoadingFavorites(true);
     fetch('http://localhost:8080/properties')
       .then(res => res.json())
       .then((data) => {
-        //console.log(data)
         setListings(data)
         setLoading(false)
+      })
+      .catch(err => console.log(err));
+    fetch('http://localhost:8080/favorites/user/' + userId)
+      .then(res => res.json())
+      .then((data) => {
+        if (data && data.length > 0) {
+          setFavoriteIds(data.map((fav) => fav.propertyId));
+        }
+        setLoadingFavorites(false);
       })
       .catch(err => console.log(err));
   }, []);
 
   const searchListing = (listings) => {
-    return listings.filter(listing => listing.location.city.toLowerCase().indexOf(filterText.toLowerCase()) !== -1 || listing.title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1);
+    if (!showFavorites) {
+      return listings.filter(listing => listing.location.city.toLowerCase().indexOf(filterText.toLowerCase()) !== -1
+        || listing.title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1);
+    }
+    return listings.filter(listing => favoriteIds.indexOf(listing._id) === -1 && (listing.location.city.toLowerCase().indexOf(filterText.toLowerCase()) !== -1 
+    || listing.title.toLowerCase().indexOf(filterText.toLowerCase())) !== -1);
   }
 
   const singleListingView = (idx) => {
@@ -39,6 +69,10 @@ function Listings() {
 
   const mainContentView = () => {
     setListView(true);
+  }
+
+  const toggleFavoriteView = () => {
+    setShowFavorites(!showFavorites)
   }
 
   useEffect(() => {
@@ -53,9 +87,10 @@ function Listings() {
       {listView ? <SearchBar
         filterText={filterText}
         onFilterTextChange={setFilterText}
+        toggleFavorite={toggleFavoriteView}
       /> : <></>}
       <div className="row">
-        {loading ?
+        {loading || loadingFavorites ?
           <div>Loading data </div> :
           (
             listView ?
@@ -70,8 +105,32 @@ function Listings() {
 function SearchBar({
   filterText,
   onFilterTextChange,
+  toggleFavorite
 }) {
   const [selectedOption, setSelectedOption] = useState('Option 1');
+
+  const navigate = useNavigate()
+
+  const navToHosting = () => {
+    navigate('/host', {
+      state: {
+        key: 'value',
+      }
+    })
+  }
+
+  const navToFavorites = () => {
+    toggleFavorite();
+  }
+
+  const navToReservations = () => {
+    navigate('/reservations', {
+      state: {
+        key: 'value',
+      }
+    })
+  }
+
   return (
     <div className="row navbar-style">
       <div className="col-lg-1 center-all">
@@ -88,15 +147,6 @@ function SearchBar({
       </div>
 
       <div className="col-lg-1 header">
-      {/* <label>Select an option:</label>
-      <select value={selectedOption} onChange={(event) => {
-        setSelectedOption(event.target.value);
-      }}>
-        <option value="Option 1">Log In</option>
-        <option value="Option 2">Sign up</option>
-        <option value="Option 3">Become a Host</option>
-        <option value="Option 4">Show Favorites</option>
-      </select> */}
       <Login></Login>
      
     </div>
@@ -104,6 +154,24 @@ function SearchBar({
 
     <Signup></Signup>
     </div>
+      {/* <div className='col-lg-3 d-flex justify-content-end' style={{ paddingRight: "3%" }}>
+        <Tooltip title="Hosting">
+          <IconButton >
+            <AddHome onClick={navToHosting} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Toggle Favorites">
+          <IconButton>
+            <Favorite onClick={navToFavorites} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Reservations">
+          <IconButton>
+            <EventSeat onClick={navToReservations} />
+          </IconButton>
+        </Tooltip>
+      </div> */}
+
     </div>
   )
 }

@@ -2,16 +2,6 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
 
-//list all
-// router.get('/', async (req,res) => {
-//     try{
-//         const properties = await Property.find()
-//         res.send(properties)
-//     } catch(error) {
-//         res.status(500).json({ message:error.message })
-//     }
-// })
-
 //get one helper
 async function getUser(req,res,next) {
     let user
@@ -32,12 +22,24 @@ router.get('/:id', getUser, (req,res) => {
     res.json(res.user)
 })
 
-router.get('/:userName', async (req,res) => {
+router.post('/authenticate/', async (req,res) => {
     try{
+        if (!req.body.userName || !req.body.password) {
+            res.status(403).json({ message: 'Username or password is not entered' })
+        }
         const users = await User.find({
-            userName : req.params.userName
+            userName : req.body.userName
         })
-        res.send(users)
+        if (!users || users.length == 0) {
+            res.status(403).json({ message: 'Username does not exist' })
+        }
+        const dbPass = users[0].password;
+        if (dbPass === req.body.password) {
+            res.send(users[0])
+        }
+        else {
+            res.status(403).json({ message: 'Password is incorrect' })
+        }
     } catch(error) {
         res.status(500).json({ message:error.message })
     }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import md5 from 'md5';
 import '../App.css';
+import UserSession from './UserSession';
 
 //Bootstrap and jQuery libraries
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -77,17 +78,29 @@ const Login = () => {
         const [visible, setVisible] = useState(false);
       
         const onCreate = (values) => {
+          console.log(values)
           const hashedPassword=md5(values.password)
-          fetch("http://localhost:8080/users/" + values.userName)
-          .then((response) => response.json())
-          .then((data) => { console.log("DATA",data)
-            if (data.success) {
-            console.log("SUCCESSSSS")
-          } else {
-            // Login failed, do something here
-            console.log("FAILUREEEEE")
-          }})
-          .catch((error) => console.log(error," Request Body: "));
+          const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userName: values.userName,
+              password: hashedPassword
+            }),
+        };
+        fetch("http://localhost:8080/users/authenticate/", requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                UserSession.setData(data)
+            })
+            .catch((error) => {
+              console.log(error)
+              alert(error.message)
+              if (error.message) {
+                alert(error.message)
+              }
+            });
         };
       
         return (

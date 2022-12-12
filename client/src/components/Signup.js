@@ -55,7 +55,7 @@ const Signup = () =>{
                 });
             }}
           >
-            <Form //onSubmit={handleSubmit}
+            <Form 
               form={form}
               layout="vertical"
               name="form_in_modal"
@@ -126,7 +126,7 @@ const Signup = () =>{
                   },
                   {
                     pattern: /^[0-9]{3}[0-9]{3}[0-9]{4}$/,
-                    message: 'Must contain at least ten numbers and no letters or characters',
+                    message: 'Must contain ten digits and no letters or characters',
                 },
                 ]}
               >

@@ -93,6 +93,17 @@ const Login = () => {
             .then((data) => {
                 console.log(data)
                 UserSession.setData(data)
+                if(data.success){
+                  Modal.success({
+                    title: 'Login Successful',
+                    content: 'You have successfully logged in.',
+                  });
+                }else{
+                  Modal.error({
+                    title: 'Login Failed',
+                    content: 'Invalid credentials',
+                  });
+                }
             })
             .catch((error) => {
               console.log(error)

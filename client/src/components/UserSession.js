@@ -13,6 +13,7 @@ var UserSession = (function () {
     };
 
     var setData = function (newUser) {
+        console.log('Inside setData', newUser)
         data = newUser;
         isSet = true;
     };
@@ -28,6 +29,7 @@ var UserSession = (function () {
     };
 
     var isSessionSet = function () {
+        console.log('inside isSessionSet',isSet)
         return isSet;
     }
 

@@ -27,7 +27,10 @@ const Signup = () =>{
       };
       fetch("http://localhost:8080/users", requestOptions)
           .then((response) => response.json())
-          .then((data) => { console.log("Data sent",data,"ANDDDDD", requestOptions) })
+          .then((data) => { 
+            console.log("Data sent",data,"ANDDDDD", requestOptions)
+            window.location.reload()
+         })
           .catch((error) => console.log(error," Request Body: ",requestOptions));
 
       }
@@ -166,7 +169,6 @@ const Signup = () =>{
               type="primary"
               onClick={() => {
                 setVisible(true);
-                
               }}
             >
               Sign Up

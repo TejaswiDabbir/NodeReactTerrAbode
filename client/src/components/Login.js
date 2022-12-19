@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import md5 from 'md5';
 import '../App.css';
-import UserSession from './UserSession';
+import Session from 'react-session-api';
 
 //Bootstrap and jQuery libraries
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -92,8 +92,9 @@ const Login = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data)
-                UserSession.setData(data)
-                if(data.success){
+                Session.set('data', data)
+                Session.set('loggedIn', true)
+                if(!data.message){
                   Modal.success({
                     title: 'Login Successful',
                     content: 'You have successfully logged in.',

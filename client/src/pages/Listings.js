@@ -4,7 +4,6 @@ import MainContent from '../components/main-content';
 import SingleListing from '../components/single-listing';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
-import AccountMenu from '../components/account-menu';
 import {
   Tooltip,
   IconButton
@@ -12,9 +11,12 @@ import {
 import {
   AddHome,
   Favorite,
-  EventSeat
+  EventSeat, 
+  Logout
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom';
+// import UserSession from '../components/UserSession';
+import Session from 'react-session-api';
 
 function Listings() {
 
@@ -27,6 +29,7 @@ function Listings() {
   const [listingID, setListingID] = useState(-1);
   const [favoriteIds, setFavoriteIds] = useState([])
   const [showFavorites, setShowFavorites] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
 
 
   const userId = '639237c1a0fead10016e489b';
@@ -57,9 +60,18 @@ function Listings() {
       return listings.filter(listing => listing.location.city.toLowerCase().indexOf(filterText.toLowerCase()) !== -1
         || listing.title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1);
     }
-    return listings.filter(listing => favoriteIds.indexOf(listing._id) === -1 && (listing.location.city.toLowerCase().indexOf(filterText.toLowerCase()) !== -1 
-    || listing.title.toLowerCase().indexOf(filterText.toLowerCase())) !== -1);
+    return listings.filter(listing => favoriteIds.indexOf(listing._id) === -1 && (listing.location.city.toLowerCase().indexOf(filterText.toLowerCase()) !== -1
+      || listing.title.toLowerCase().indexOf(filterText.toLowerCase())) !== -1);
   }
+
+  const sessionItems = (data) => {
+    setLoading(true)
+    console.log('sessionItems',data)
+    setLoggedIn(data.loggedIn)
+    setLoading(false)
+  }
+
+  Session.onSet(sessionItems);
 
   const singleListingView = (idx) => {
     setLoading(true);
@@ -88,6 +100,7 @@ function Listings() {
         filterText={filterText}
         onFilterTextChange={setFilterText}
         toggleFavorite={toggleFavoriteView}
+        loggedIn={loggedIn}
       /> : <></>}
       <div className="row">
         {loading || loadingFavorites ?
@@ -105,7 +118,8 @@ function Listings() {
 function SearchBar({
   filterText,
   onFilterTextChange,
-  toggleFavorite
+  toggleFavorite,
+  loggedIn
 }) {
   const [selectedOption, setSelectedOption] = useState('Option 1');
 
@@ -131,6 +145,12 @@ function SearchBar({
     })
   }
 
+  const logout = () => {
+    Session.set('data', {})
+    Session.set('loggedIn', false)
+    // window.location.reload()
+  }
+
   return (
     <div className="row navbar-style">
       <div className="col-lg-1 center-all">
@@ -145,32 +165,46 @@ function SearchBar({
           </div>
         </form>
       </div>
+      {
+        loggedIn ?
+          <>
+            <div className='col-lg-3 d-flex justify-content-end' style={{ paddingRight: "3%" }}>
+              <Tooltip title="Hosting">
+                <IconButton >
+                  <AddHome onClick={navToHosting} />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Toggle Favorites">
+                <IconButton>
+                  <Favorite onClick={navToFavorites} />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Reservations">
+                <IconButton>
+                  <EventSeat onClick={navToReservations} />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Logout">
+                <IconButton>
+                  <Logout onClick={logout} />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </>
+          :
+          <>
+            <div className="col-lg-1 header">
+              <Login></Login>
 
-      <div className="col-lg-1 header">
-      <Login></Login>
-     
-    </div>
-    <div className="col-lg-1 header">
+            </div>
+            <div className="col-lg-1 header">
 
-    <Signup></Signup>
-    </div>
-      {/* <div className='col-lg-3 d-flex justify-content-end' style={{ paddingRight: "3%" }}>
-        <Tooltip title="Hosting">
-          <IconButton >
-            <AddHome onClick={navToHosting} />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Toggle Favorites">
-          <IconButton>
-            <Favorite onClick={navToFavorites} />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Reservations">
-          <IconButton>
-            <EventSeat onClick={navToReservations} />
-          </IconButton>
-        </Tooltip>
-      </div> */}
+              <Signup></Signup>
+            </div>
+          </>
+      }
+
+
 
     </div>
   )

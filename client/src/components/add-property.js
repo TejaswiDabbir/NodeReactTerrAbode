@@ -65,11 +65,9 @@ const AddPropertyModal = (props) => {
     const uploadImages = () => {
         console.log(images)
         const imageData = new FormData()
-        for (let image in images) {
-            imageData.append(
-                'img', image
-            )
-        }
+        Object.values(images).forEach((file) => {
+            imageData.append('img',file)
+        })
         // imageData.append('img', images[0])
         console.log(imageData)
         const requestOptions = {

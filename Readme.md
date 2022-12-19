@@ -1,0 +1,12 @@
+- Unzip the zipped file
+- it will have 2 folders : client and server
+- Open 2 terminals
+- In terminal 1, do: (to run the server)
+    - cd server
+    - npm install
+    - npm start
+- In terminal 2, do: (to run the client)
+    - cd client
+    - npm install
+    - npm start
+- open a browser and visit 'http://localhost:3000/listings'
